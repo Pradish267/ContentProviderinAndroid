@@ -30,12 +30,133 @@ Step 7: Save and run the application.
 ```
 /*
 Program to print the text create your own content providers to get contacts details.
-Developed by:
-Registeration Number :
+Developed by:PRADISH PRIYAN S P
+Registeration Number :212225230210
 */
+```
+```
+main activity
+```
+```
+package com.example.contactexpt;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.ContentResolver;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.util.Log;
+import android.view.View;
+
+public class MainActivity extends AppCompatActivity {
+
+    private static final int REQUEST_CONTACTS = 100;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
+
+    public void btnGetContacts(View v) {
+        getPhoneContacts();
+    }
+
+    public void getPhoneContacts() {
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_CONTACTS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.READ_CONTACTS},
+                    REQUEST_CONTACTS);
+            return;
+        }
+
+        ContentResolver contentResolver = getContentResolver();
+        Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+
+        Cursor cursor = contentResolver.query(uri,
+                null,
+                null,
+                null,
+                null);
+
+        if (cursor == null) {
+            return;
+        }
+
+        Log.i("CONTACT_PROVIDER",
+                "TOTAL # of CONTACTS ::: " + cursor.getCount());
+
+        if (cursor.getCount() > 0) {
+
+            while (cursor.moveToNext()) {
+
+                @SuppressLint("Range")
+                String contactName = cursor.getString(
+                        cursor.getColumnIndex(
+                                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+
+                @SuppressLint("Range")
+                String contactNumber = cursor.getString(
+                        cursor.getColumnIndex(
+                                ContactsContract.CommonDataKinds.Phone.NUMBER));
+
+                Log.i("CONTACT_PROVIDER_DEMO",
+                        "Contact Name ::: " + contactName +
+                                " Phone Number ::: " + contactNumber);
+            }
+        }
+
+        cursor.close();
+    }
+
+
+}
+```
+```
+activityxml code
+```
+```
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Contact Provider"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="20dp"/>
+
+    <Button
+        android:id="@+id/btnContacts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Get Contacts"
+        android:onClick="btnGetContacts"/>
+
+</LinearLayout>
 ```
 
 ## OUTPUT
+<img width="1917" height="1078" alt="Screenshot 2026-07-29 131217" src="https://github.com/user-attachments/assets/75485119-3c90-4a12-b73d-aa55fc424c7a" />
+
+<img width="1917" height="1078" alt="Screenshot 2026-07-29 132311" src="https://github.com/user-attachments/assets/7bad718f-4ad2-40a9-9613-af04d598458a" />
+<img width="1917" height="1078" alt="Screenshot 2026-07-29 133131" src="https://github.com/user-attachments/assets/4cceb7d2-b0b8-4419-8546-7ee5de56cc2d" />
 
 
 
